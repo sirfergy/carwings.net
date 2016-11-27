@@ -44,6 +44,7 @@
     <Compile Include="Converters\TimeSpanJsonConverter.cs" />
     <Compile Include="Converters\VehicleInfoListJsonConverter.cs" />
     <Compile Include="Converters\VehicleProfileJsonConverter.cs" />
+    <Compile Include="Interfaces\ILoginProvider.cs" />
     <Compile Include="Models\BatteryStatus.cs" />
     <Compile Include="Models\BatteryStatusCheckResultResponse.cs" />
     <Compile Include="Models\BatteryStatusRecords.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Models\HvacStatus.cs" />
     <Compile Include="Models\HvacStatusCheckResultResponse.cs" />
     <Compile Include="Models\HvacStatusResponse.cs" />
+    <Compile Include="Models\InitialAppResponse.cs" />
     <Compile Include="Models\UserLoginResponse.cs" />
     <Compile Include="Models\VehicleInfo.cs" />
     <Compile Include="Models\VehicleProfile.cs" />
