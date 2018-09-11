@@ -88,7 +88,14 @@ namespace carwings.net
             }
             else
             {
-                throw new Exception("Unexpected Response from Carwings");
+                Exception e = new Exception("Unexpected Response from Carwings: " + response.StatusCode);
+                e.Data["URL"] = url;
+                e.Data["ResponseStatusCode"] = response.StatusCode;
+                if (response.Content != null)
+                {
+                    e.Data["Response"] = response.Content.ReadAsStringAsync().Result;
+                }
+                throw e;
             }
         }
     }
