@@ -6,6 +6,11 @@ namespace Tests
     [TestClass]
     public class FunctionalTests
     {
+        public TestContext TestContext
+        {
+            get; set;
+        }
+
         [TestMethod]
         public void Login()
         {
@@ -50,6 +55,10 @@ namespace Tests
 
         private Carwings GetCarwings()
         {
-            return new Carwings(Region.USA, "username", "password");       }
+            var username = (string)TestContext.Properties["username"];
+            var password = (string)TestContext.Properties["password"];
+
+            return new Carwings(Region.USA, username, password);
+        }
     }
 }

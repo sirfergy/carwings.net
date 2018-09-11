@@ -234,3 +234,9 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# VS Code
+.vscode/
+
+# Test runsettings with secrets
+**/Tests/*.runsettings
