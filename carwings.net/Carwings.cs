@@ -1,84 +1,115 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace carwings.net
 {
     public class Carwings
     {
-        private const string baseUrl = "https://gdcportalgw.its-mo.com/orchestration_1111/gdc";
+        // Values from http://virantha.com/2016/04/07/updated-reverse-engineering-nissan-connect-ev-protocol/
+        private const string baseUrl = "https://gdcportalgw.its-mo.com/gworchest_160803EC/gdc";
+        private const string initialAppString = "geORNtsZe5I4lRGjG9GZiA";
+        private const string contentType = "application/x-www-form-urlencoded";
 
         private Region region;
-        private string userId;
-        private string password;
+        private ILoginProvider loginProvider;
         private string language = null;
         private string timezone = null;
 
-        public Carwings(Region region, string userId, string password)
+        public Carwings(Region region, ILoginProvider loginProvider)
         {
             this.region = region;
-            this.userId = userId;
-            this.password = password;
+            this.loginProvider = loginProvider;
+            this.language = "en-US";
         }
 
         public async Task<UserLoginResponse> Login()
         {
-            var loginResponse = await ExecuteRequest<UserLoginResponse>($"{baseUrl}/UserLoginRequest.php?RegionCode={this.region.ToRegionCode()}&UserId={this.userId}&Password={this.password}");
-            if (loginResponse != null &&
-                loginResponse.Status == 200)
+            var encryptionKeyResponse = await ExecuteRequest<InitialAppResponse>($"{baseUrl}/InitialApp.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&initial_app_strings={initialAppString}");
+            if(encryptionKeyResponse != null &&
+                encryptionKeyResponse.Status == 200)
             {
-                language = loginResponse.CustomerInfo.Language;
-                timezone = loginResponse.CustomerInfo.Timezone;
+                // Managed to perform initial encryption handshake. Get password from provider and encode for sending 
+                string base64Password = loginProvider.GetEncryptedPassword(encryptionKeyResponse.Baseprm);
+                string urlEncodedPassword = WebUtility.UrlEncode(base64Password);
+
+                var loginResponse = await ExecuteRequest<UserLoginResponse>($"{baseUrl}/UserLoginRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&initial_app_strings={initialAppString}&UserId={loginProvider.Username}&Password={base64Password}");
+                if (loginResponse != null &&
+                    loginResponse.Status == 200)
+                {
+                    language = loginResponse.CustomerInfo.Language;
+                    timezone = loginResponse.CustomerInfo.Timezone;
+                }
+
+                return loginResponse;
             }
-
-            return loginResponse;
+            else
+            {
+                return new UserLoginResponse { Status = encryptionKeyResponse.Status, Message = encryptionKeyResponse.Message };
+            }
         }
 
-        public async Task<BatteryStatusRecordsResponse> GetBatteryStatus(VehicleProfile vehicle)
+        public async Task<BatteryStatusRecordsResponse> GetBatteryStatus(VehicleInfo info, VehicleProfile vehicle)
         {
-            return await ExecuteRequest<BatteryStatusRecordsResponse>($"{baseUrl}/BatteryStatusRecordsRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<BatteryStatusRecordsResponse>($"{baseUrl}/BatteryStatusRecordsRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<CheckRequestResponse> RefreshBatteryStatus(VehicleProfile vehicle)
+        public async Task<CheckRequestResponse> RefreshBatteryStatus(VehicleInfo info, VehicleProfile vehicle)
         {
-            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/BatteryStatusCheckRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&UserId={vehicle.GdcUserId}&tz={this.timezone}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/BatteryStatusCheckRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&UserId={vehicle.GdcUserId}&tz={this.timezone}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<BatteryStatusCheckResultResponse> CheckBatteryStatus(VehicleProfile vehicle, CheckRequestResponse checkRequest)
+        public async Task<BatteryStatusCheckResultResponse> CheckBatteryStatus(VehicleInfo info, VehicleProfile vehicle, CheckRequestResponse checkRequest)
         {
-            return await ExecuteRequest<BatteryStatusCheckResultResponse>($"{baseUrl}/BatteryStatusCheckResultRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<BatteryStatusCheckResultResponse>($"{baseUrl}/BatteryStatusCheckResultRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<HvacStatusResponse> GetHvacStatus(VehicleProfile vehicle)
+        public async Task<HvacStatusResponse> GetHvacStatus(VehicleInfo info, VehicleProfile vehicle)
         {
-            return await ExecuteRequest<HvacStatusResponse>($"{baseUrl}/RemoteACRecordsRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<HvacStatusResponse>($"{baseUrl}/RemoteACRecordsRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<CheckRequestResponse> HvacOn(VehicleProfile vehicle)
+        public async Task<CheckRequestResponse> HvacOn(VehicleInfo info, VehicleProfile vehicle)
         {
-            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/ACRemoteRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/ACRemoteRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<HvacStatusCheckResultResponse> CheckHvacOnStatus(VehicleProfile vehicle, CheckRequestResponse checkRequest)
+        public async Task<HvacStatusCheckResultResponse> CheckHvacOnStatus(VehicleInfo info, VehicleProfile vehicle, CheckRequestResponse checkRequest)
         {
-            return await ExecuteRequest<HvacStatusCheckResultResponse>($"{baseUrl}/ACRemoteResult.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<HvacStatusCheckResultResponse>($"{baseUrl}/ACRemoteResult.php",$"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<CheckRequestResponse> HvacOff(VehicleProfile vehicle)
+        public async Task<CheckRequestResponse> HvacOff(VehicleInfo info, VehicleProfile vehicle)
         {
-            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/ACRemoteOffRequest.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<CheckRequestResponse>($"{baseUrl}/ACRemoteOffRequest.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={vehicle.Vin}&tz={this.timezone}&custom_sessionid={urlEncodedSessionId}");
         }
 
-        public async Task<HvacStatusCheckResultResponse> CheckHvacOffStatus(VehicleProfile vehicle, CheckRequestResponse checkRequest)
+        public async Task<HvacStatusCheckResultResponse> CheckHvacOffStatus(VehicleInfo info, VehicleProfile vehicle, CheckRequestResponse checkRequest)
         {
-            return await ExecuteRequest<HvacStatusCheckResultResponse>($"{baseUrl}/ACRemoteOffResult.php?RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}");
+            string urlEncodedSessionId = WebUtility.UrlEncode(info.CustomSessionId);
+            return await ExecuteRequest<HvacStatusCheckResultResponse>($"{baseUrl}/ACRemoteOffResult.php", $"RegionCode={this.region.ToRegionCode()}&lg={this.language}&DCMID={vehicle.DcmId}&VIN={checkRequest.Vin}&UserId={checkRequest.UserId}&tz={this.timezone}&resultKey={checkRequest.ResultKey}&custom_sessionid={urlEncodedSessionId}");
         }
 
         private async Task<T> ExecuteRequest<T>(string url)
         {
+            return await ExecuteRequest<T>(url, String.Empty);
+        }
+
+        private async Task<T> ExecuteRequest<T>(string url, string encodedData)
+        {
             var client = new HttpClient();
-            var response = await client.GetAsync(url);
+            var outgoingContent = new StringContent(encodedData, Encoding.ASCII, contentType);
+            var response = await client.PostAsync(url, outgoingContent);
 
             if (response.IsSuccessStatusCode)
             {
