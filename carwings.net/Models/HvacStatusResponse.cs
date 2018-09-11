@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace carwings.net
 {
@@ -12,6 +11,6 @@ namespace carwings.net
         [JsonProperty("RemoteACRecords")]
         public HvacStatus HvacStatus { get; set; }
 
-        public DateTime OperationDateAndTime { get; set; }
+        public string OperationDateAndTime { get; set; }
     }
 }

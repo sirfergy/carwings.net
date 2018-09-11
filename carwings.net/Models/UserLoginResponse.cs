@@ -1,10 +1,22 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace carwings.net
 {
     public class UserLoginResponse
     {
+        public class VehicleProfileWrapper
+        {
+            public VehicleProfile Profile { get; set; }
+        }
+
+        public class VehicleInfoWrapper
+        {
+            [JsonProperty("VehicleInfo")]
+            [JsonConverter(typeof(VehicleInfoListJsonConverter))]
+            public List<VehicleInfo> VehicleInfos{ get; set; }
+        }
+
         public int Status { get; set; }
 
         public string Message { get; set; }
@@ -13,8 +25,6 @@ namespace carwings.net
 
         public string ErrorMessage { get; set; }
         
-        public string SessionId { get; set; }
-
         public string EncAuthToken { get; set; }
 
         public int UserInfoRevisionNo { get; set; }
@@ -22,9 +32,14 @@ namespace carwings.net
         public CustomerInfo CustomerInfo { get; set; }
 
         [JsonProperty("VehicleInfoList")]
-        public List<VehicleInfo> Vehicles { get; set; }
+        public VehicleInfoWrapper InfoWrapper { get; set; }
 
         [JsonProperty("vehicle")]
-        public VehicleProfile Profile { get; set; }
+        public VehicleProfileWrapper ProfileWrapper { get; set; }
+
+        public VehicleProfile Profile { get { return ProfileWrapper.Profile; } }
+
+        public List<VehicleInfo> Vehicles { get { return InfoWrapper.VehicleInfos; } }
+
     }
 }
