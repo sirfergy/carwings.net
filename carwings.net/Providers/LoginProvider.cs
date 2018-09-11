@@ -16,7 +16,7 @@ namespace carwings.net.login.bouncycastle
             // Password must be 8 bute aligned
             byte[] passwordByteArray = Encoding.ASCII.GetBytes(plainTextPassword);
             int paddingBytesRequired = 8 - (passwordByteArray.Length % 8);
-            if(paddingBytesRequired > 0)
+            if (paddingBytesRequired > 0)
             {
                 this.Password = new byte[passwordByteArray.Length + paddingBytesRequired];
                 Buffer.BlockCopy(passwordByteArray, 0, this.Password, 0, passwordByteArray.Length);
@@ -46,6 +46,6 @@ namespace carwings.net.login.bouncycastle
             return Convert.ToBase64String(encryptedPasswordArray);
         }
 
-        private byte[] Password { get; set; } 
+        private byte[] Password { get; set; }
     }
 }

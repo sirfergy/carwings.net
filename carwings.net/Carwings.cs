@@ -10,7 +10,7 @@ namespace carwings.net
     public class Carwings
     {
         // Values from http://virantha.com/2016/04/07/updated-reverse-engineering-nissan-connect-ev-protocol/
-        private const string baseUrl = "https://gdcportalgw.its-mo.com/gworchest_0323A/gdc";
+        private const string baseUrl = "https://gdcportalgw.its-mo.com/gworchest_160803EC/gdc";
         private const string initialAppString = "geORNtsZe5I4lRGjG9GZiA";
         private const string contentType = "application/x-www-form-urlencoded";
 

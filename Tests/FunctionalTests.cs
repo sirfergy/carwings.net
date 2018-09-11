@@ -1,8 +1,8 @@
-﻿using carwings.net;
+﻿using System.Net;
+using System.Threading;
+using carwings.net;
 using carwings.net.login.bouncycastle;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Net;
-using System.Threading;
 
 namespace Tests
 {
@@ -113,19 +113,12 @@ namespace Tests
             // Disable HTTPS verification, to allow using Fiddler
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
 
-            // Use BouncyCastle implementation of password provider
-            LoginProvider loginProvider = new LoginProvider("Username", "Password");
-
-            return new Carwings(Region.Europe, loginProvider);
-        }
-
-
-        private Carwings GetCarwingsProduction()
-        {
             var username = (string)TestContext.Properties["username"];
             var password = (string)TestContext.Properties["password"];
+            // Use BouncyCastle implementation of password provider
+            var loginProvider = new LoginProvider(username, password);
 
-            return new Carwings(Region.USA, username, password);
+            return new Carwings(Region.USA, loginProvider);
         }
     }
 }
