@@ -4,24 +4,20 @@ using Newtonsoft.Json.Linq;
 
 namespace carwings.net
 {
-    public class VehicleProfileJsonConverter : JsonConverter
+    public class SandsNotificationEventJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(VehicleProfile);
+            return objectType == typeof(Location);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
-            var profile = obj.SelectToken("profile");
 
-            if (profile != null)
-            {
-                return profile.ToObject<VehicleProfile>();
-            }
+            var sandsNotificationEvent = obj.SelectToken("sandsNotificationEvent.body.location");
 
-            return null;
+            return sandsNotificationEvent.ToObject<Location>();
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
