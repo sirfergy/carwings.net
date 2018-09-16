@@ -20,6 +20,9 @@ namespace Tests
             Assert.IsNotNull(vehicles);
             Assert.IsTrue(vehicles.Length > 0);
             Assert.IsNotNull(vehicles[0].VIN);
+            Assert.IsNotNull(vehicles[0].BatteryRecord);
+            Assert.IsTrue(vehicles[0].BatteryRecord.CrusingRangeAcOff > 0);
+            Assert.IsTrue(vehicles[0].BatteryRecord.CrusingRangeAcOn > 0);
         }
 
         [TestMethod]
@@ -56,7 +59,7 @@ namespace Tests
         }
 
         [TestMethod]
-        
+        [Ignore]
         public async Task ChargeOff()
         {
             var carwings = new Carwings();
