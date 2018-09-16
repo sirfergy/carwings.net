@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace carwings.net
 {
-    public class TimeSpanJsonConverter : JsonConverter
+    public class TimeRequiredJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType)
         {
@@ -15,8 +15,8 @@ namespace carwings.net
         {
             var obj = JObject.Load(reader);
 
-            var hours = obj.Value<int>("HourRequiredToFull");
-            var minutes = obj.Value<int>("MinutesRequiredToFull");
+            var hours = obj.Value<int>("hourRequiredToFull");
+            var minutes = obj.Value<int>("minutesRequiredToFull");
 
             return new TimeSpan(hours, minutes, 0);
         }
