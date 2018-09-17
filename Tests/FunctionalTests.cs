@@ -71,7 +71,7 @@ namespace Tests
 
         [TestMethod]
         [Ignore]
-        public async Task ChageOn()
+        public async Task ChargeOn()
         {
             var carwings = new Carwings();
             var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
