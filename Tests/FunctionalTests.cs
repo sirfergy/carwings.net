@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using carwings.net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Tests
 {
@@ -21,8 +25,8 @@ namespace Tests
             Assert.IsTrue(vehicles.Length > 0);
             Assert.IsNotNull(vehicles[0].VIN);
             Assert.IsNotNull(vehicles[0].BatteryRecord);
-            Assert.IsTrue(vehicles[0].BatteryRecord.CrusingRangeAcOff > 0);
-            Assert.IsTrue(vehicles[0].BatteryRecord.CrusingRangeAcOn > 0);
+            Assert.IsTrue(vehicles[0].BatteryRecord.CruisingRangeAcOff > 0);
+            Assert.IsTrue(vehicles[0].BatteryRecord.CruisingRangeAcOn > 0);
         }
 
         [TestMethod]
@@ -92,5 +96,38 @@ namespace Tests
             Assert.IsTrue(location.Latitude > 0);
             Assert.IsTrue(location.Longitude > 0);
         }
+
+
+        #region Serialization Tests
+
+        private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+
+        private class TimeSpanFieldTest
+        {
+            public TimeSpan Time;
+            public TimeSpan? NullableTimeSpan;
+            public TimeSpan? NullTimeSpan;
+        }
+
+        [TestMethod]
+        public void TimeSpanSerializationTest()
+        {
+            var testObj = new TimeSpanFieldTest();
+            testObj.Time = TimeSpan.FromHours(1);
+            testObj.NullableTimeSpan = TimeSpan.FromHours(2);
+            testObj.NullTimeSpan = null;
+
+            var json = JsonConvert.SerializeObject(testObj, serializerSettings);
+            var deserialized = JsonConvert.DeserializeObject<TimeSpanFieldTest>(json);
+
+            Assert.IsTrue(deserialized.Time == TimeSpan.FromHours(1));
+            Assert.IsTrue(deserialized.NullableTimeSpan == TimeSpan.FromHours(2));
+            Assert.IsNull(deserialized.NullTimeSpan);
+        }
+
+        #endregion Serialization Tests
     }
 }

@@ -24,25 +24,25 @@ namespace carwings.net
         /// Range in meters when the ac is on
         /// </summary>
         [JsonProperty("cruisingRangeAcOn")]
-        public double CrusingRangeAcOn { get; set; }
+        public double CruisingRangeAcOn { get; set; }
 
         /// <summary>
         /// Range in meters when the ac is off
         /// </summary>
         [JsonProperty("cruisingRangeAcOff")]
-        public double CrusingRangeAcOff { get; set; }
+        public double CruisingRangeAcOff { get; set; }
 
         [JsonProperty]
         [JsonConverter(typeof(TimeRequiredJsonConverter))]
-        public TimeSpan TimeRequired { get; set; }
+        public TimeSpan? TimeRequired { get; set; }
 
         [JsonProperty]
         [JsonConverter(typeof(TimeRequiredJsonConverter))]
-        public TimeSpan TimeRequired200 { get; set; }
+        public TimeSpan? TimeRequired200 { get; set; }
 
         [JsonProperty]
         [JsonConverter(typeof(TimeRequiredJsonConverter))]
-        public TimeSpan TimeRequired200_6kw { get; set; }
+        public TimeSpan? TimeRequired200_6kw { get; set; }
     }
 
     public class BatteryStatus
