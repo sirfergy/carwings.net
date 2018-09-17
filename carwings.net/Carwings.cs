@@ -32,13 +32,20 @@ namespace carwings.net
             };
         }
 
-        public async Task<Vehicle[]> Login(string userid, string password)
+        /// <summary>
+        /// Log in to the specified Nissan account
+        /// </summary>
+        /// <param name="userid">Email address</param>
+        /// <param name="password">password</param>
+        /// <param name="country">Country or Nissan region name, different from Nissan's V1 API.  Valid values are USA: "US"</param>
+        /// <returns>An array of Vehicles for this user.  If the login credentials were wrong, it returns a null Vehicle[].</returns>
+        public async Task<Vehicle[]> Login(string userid, string password, string country = "US")
         {
             var data = new AuthenticateRequest(
                 new Authenticate
                 {
                     Brand = "N",
-                    Country = "US",
+                    Country = country,
                     Language = "en",
                     UserId = userid,
                     Password = password
