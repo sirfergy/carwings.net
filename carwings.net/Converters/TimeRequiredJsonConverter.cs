@@ -13,7 +13,7 @@ namespace carwings.net
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            if (reader.Value == null)
+            if (reader.TokenType == JsonToken.Null)
                 return null;
 
             var obj = JObject.Load(reader);
