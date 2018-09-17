@@ -128,6 +128,16 @@ namespace Tests
             Assert.IsNull(deserialized.NullTimeSpan);
         }
 
+        [TestMethod]
+        public void DeserializeAuthenticateResult()
+        {
+            var json = File.ReadAllText("TestLeafData.txt");
+            var deserialized = JsonConvert.DeserializeObject<AuthenticateResponse>(json);
+
+            Assert.IsNotNull(deserialized.Vehicles);
+            Assert.IsTrue(deserialized.Vehicles.Length == 1);
+        }
+
         #endregion Serialization Tests
     }
 }

@@ -16,4 +16,10 @@
     <ProjectReference Include="..\carwings.net\carwings.net.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="TestLeafData.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
