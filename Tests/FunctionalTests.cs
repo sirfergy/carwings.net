@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using carwings.net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,7 +21,7 @@ namespace Tests
         public async Task Login()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             Assert.IsNotNull(vehicles);
             Assert.IsTrue(vehicles.Length > 0);
             Assert.IsNotNull(vehicles[0].VIN);
@@ -34,9 +35,9 @@ namespace Tests
         public async Task RefreshBatteryStatus()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var response = await carwings.RefreshBatteryStatus(vin);
+            var response = await carwings.RefreshBatteryStatus(vin, CancellationToken.None);
             Assert.IsNotNull(response.BatteryRecord);
         }
 
@@ -45,9 +46,9 @@ namespace Tests
         public async Task HvacOff()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var response = await carwings.HvacOff(vin);
+            var response = await carwings.HvacOff(vin, CancellationToken.None);
             Assert.IsNotNull(response);
         }
 
@@ -56,9 +57,9 @@ namespace Tests
         public async Task HvacOn()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var response = await carwings.HvacOn(vin);
+            var response = await carwings.HvacOn(vin, CancellationToken.None);
             Assert.IsNotNull(response);
         }
 
@@ -67,9 +68,9 @@ namespace Tests
         public async Task ChargeOff()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var response = await carwings.ChargeOff(vin);
+            var response = await carwings.ChargeOff(vin, CancellationToken.None);
             Assert.IsNotNull(response);
         }
 
@@ -78,9 +79,9 @@ namespace Tests
         public async Task ChargeOn()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var response = await carwings.ChargeOn(vin);
+            var response = await carwings.ChargeOn(vin, CancellationToken.None);
             Assert.IsNotNull(response);
         }
 
@@ -89,9 +90,9 @@ namespace Tests
         public async Task FindVehicle()
         {
             var carwings = new Carwings();
-            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"));
+            var vehicles = await carwings.Login(TestContext.GetTestRunsetting<string>("username"), TestContext.GetTestRunsetting<string>("password"), TestContext.GetTestRunsetting<string>("country"), CancellationToken.None);
             var vin = vehicles[0].VIN;
-            var location = await carwings.FindVehicle(vin);
+            var location = await carwings.FindVehicle(vin, CancellationToken.None);
             Assert.IsNotNull(location);
             Assert.IsTrue(location.Latitude > 0);
             Assert.IsTrue(location.Longitude > 0);
