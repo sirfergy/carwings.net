@@ -140,6 +140,7 @@ namespace Tests
             Assert.IsNotNull(deserialized.Vehicles);
             Assert.IsTrue(deserialized.Vehicles.Length == 1);
             Assert.IsTrue(deserialized.Vehicles[0].Nickname == "LEA2018");
+            Assert.AreEqual(2018, deserialized.Vehicles[0].ModelYear);
             Assert.AreEqual(100, deserialized.Vehicles[0].BatteryRecord.Status.Capacity);
             Assert.AreEqual(27.5f, deserialized.Vehicles[0].InteriorTemperatureRecord.Inc_Temp);
             Assert.AreEqual("YES", deserialized.Vehicles[0].BatteryRecord.Status.Charging);
@@ -158,6 +159,7 @@ namespace Tests
             Assert.IsTrue(deserialized.Vehicles.Length == 1);
             var grayLeaf = deserialized.Vehicles[0];
             Assert.AreEqual("Gray LEAF II", grayLeaf.Nickname);
+            Assert.AreEqual(2018, grayLeaf.ModelYear);
             Assert.AreEqual(100, grayLeaf.BatteryRecord.Status.Capacity);
             Assert.AreEqual(28.0f, grayLeaf.InteriorTemperatureRecord.Inc_Temp);
             Assert.AreEqual("NO", grayLeaf.BatteryRecord.Status.Charging);
