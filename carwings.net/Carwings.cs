@@ -41,7 +41,6 @@ namespace carwings.net
         /// <param name="country">Country or Nissan region name, different from Nissan's V1 API.  Valid values are USA: "US"</param>
         /// <param name="cancellationToken">Support for cancellation.</param>
         /// <returns>An array of Vehicles for this user.  If the login credentials were wrong, it returns a null Vehicle[].</returns>
-        [Obsolete("Provide a cancellation token")]
         public async Task<Vehicle[]> Login(string userid, string password, string country)
         {
             return await Login(userid, password, country, CancellationToken.None);
@@ -75,7 +74,6 @@ namespace carwings.net
             return response.Vehicles;
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<BatteryStatusResponse> RefreshBatteryStatus(string vin)
         {
             return await GetRequest<BatteryStatusResponse>($"{baseUrl}/battery/vehicles/{vin}/getChargingStatusRequest", 
@@ -87,7 +85,6 @@ namespace carwings.net
             return await GetRequest<BatteryStatusResponse>($"{baseUrl}/battery/vehicles/{vin}/getChargingStatusRequest", cancellationToken);
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<ExecutionResponse> HvacOn(string vin)
         {
             return await HvacOn(vin, CancellationToken.None);
@@ -100,7 +97,6 @@ namespace carwings.net
             return await PostRequest<ExecutionResponse>($"{baseUrl}/hvac/vehicles/{vin}/activateHVAC", json, cancellationToken);
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<ExecutionResponse> HvacOff(string vin)
         {
             return await HvacOff(vin, CancellationToken.None);
@@ -113,7 +109,6 @@ namespace carwings.net
             return await PostRequest<ExecutionResponse>($"{baseUrl}/hvac/vehicles/{vin}/deactivateHVAC", json, cancellationToken);
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<ExecutionResponse> ChargeOn(string vin)
         {
             return await ChargeOn(vin, CancellationToken.None);
@@ -126,7 +121,6 @@ namespace carwings.net
             return await PostRequest<ExecutionResponse>($"{baseUrl}/battery/vehicles/{vin}/remoteChargingRequest'", json, cancellationToken);
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<ExecutionResponse> ChargeOff(string vin)
         {
             return await ChargeOff(vin, CancellationToken.None);
@@ -139,7 +133,6 @@ namespace carwings.net
             return await PostRequest<ExecutionResponse>($"{baseUrl}/battery/vehicles/{vin}/cancelRemoteChargingRequest", json, cancellationToken);
         }
 
-        [Obsolete("Provide a cancellation token")]
         public async Task<Location> FindVehicle(string vin)
         {
             return await FindVehicle(vin, CancellationToken.None);

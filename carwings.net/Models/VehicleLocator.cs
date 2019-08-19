@@ -33,7 +33,8 @@ namespace carwings.net
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Position can be AVAILABLE, and potentially other values.
+        /// Position can be AVAILABLE, UNAVAILABLE, and potentially other values.
+        /// We do not yet know what this means.  We should probably figure it out.
         /// </summary>
         public String Position { get; set; }
         // There are many more fields in the Location that we are not interested in, such as the lat/long in minutes & seconds.

@@ -134,7 +134,7 @@ namespace Tests
         public void DeserializeAuthenticateResult()
         {
             // Deserialize one Leaf.  Data from ~September 2018
-            var json = File.ReadAllText("TestLeafAuthData1.txt");
+            var json = File.ReadAllText("TestLeafAuthData1.json");
             var deserialized = JsonConvert.DeserializeObject<AuthenticateResponse>(json);
 
             Assert.IsNotNull(deserialized.Vehicles);
@@ -142,7 +142,7 @@ namespace Tests
             Assert.IsTrue(deserialized.Vehicles[0].Nickname == "LEA2018");
             Assert.AreEqual(2018, deserialized.Vehicles[0].ModelYear);
             Assert.AreEqual(100, deserialized.Vehicles[0].BatteryRecord.Status.Capacity);
-            Assert.AreEqual(27.5f, deserialized.Vehicles[0].InteriorTemperatureRecord.Inc_Temp);
+            Assert.AreEqual(27.5f, deserialized.Vehicles[0].InteriorTemperatureRecord.IncTemp);
             Assert.AreEqual("YES", deserialized.Vehicles[0].BatteryRecord.Status.Charging);
             Assert.AreEqual(74, deserialized.Vehicles[0].BatteryRecord.Status.Remaining);
             Assert.AreEqual(74, deserialized.Vehicles[0].BatteryRecord.Status.StateOfCharge.Value);
@@ -152,7 +152,7 @@ namespace Tests
             Assert.AreEqual(TimeSpan.FromHours(3), deserialized.Vehicles[0].BatteryRecord.TimeRequired200_6kw.Value);
 
             // Deserialize a second Leaf.  Data from August 2019.
-            json = File.ReadAllText("TestLeafAuthData2.txt");
+            json = File.ReadAllText("TestLeafAuthData2.json");
             deserialized = JsonConvert.DeserializeObject<AuthenticateResponse>(json);
 
             Assert.IsNotNull(deserialized.Vehicles);
@@ -161,7 +161,7 @@ namespace Tests
             Assert.AreEqual("Gray LEAF II", grayLeaf.Nickname);
             Assert.AreEqual(2018, grayLeaf.ModelYear);
             Assert.AreEqual(100, grayLeaf.BatteryRecord.Status.Capacity);
-            Assert.AreEqual(28.0f, grayLeaf.InteriorTemperatureRecord.Inc_Temp);
+            Assert.AreEqual(28.0f, grayLeaf.InteriorTemperatureRecord.IncTemp);
             Assert.AreEqual("NO", grayLeaf.BatteryRecord.Status.Charging);
             Assert.AreEqual(74, grayLeaf.BatteryRecord.Status.Remaining);
             Assert.AreEqual(74, grayLeaf.BatteryRecord.Status.StateOfCharge.Value);
@@ -175,7 +175,7 @@ namespace Tests
         public void DeserializeBatteryStatusResult()
         {
             // Deserialize a real Leaf battery record.  Data from August 2019.
-            var json = File.ReadAllText("TestLeafBatteryRecord.txt");
+            var json = File.ReadAllText("TestLeafBatteryRecord.json");
             var deserialized = JsonConvert.DeserializeObject<BatteryStatusResponse>(json);
 
             Assert.IsNotNull(deserialized.BatteryRecord);
@@ -183,7 +183,7 @@ namespace Tests
             var batteryStatus = deserialized.BatteryRecord.Status;
             Assert.AreEqual(187000.0, deserialized.BatteryRecord.CruisingRangeAcOn);
             Assert.AreEqual(195000.0, deserialized.BatteryRecord.CruisingRangeAcOff);
-            Assert.AreEqual(27.5f, deserialized.TemperatureRecord.Inc_Temp);
+            Assert.AreEqual(27.5f, deserialized.TemperatureRecord.IncTemp);
             Assert.AreEqual("NO", batteryStatus.Charging);
             Assert.AreEqual(TimeSpan.FromHours(13), deserialized.BatteryRecord.TimeRequired.Value);
         }
@@ -192,7 +192,7 @@ namespace Tests
         public void DeserializeLocationResponse()
         {
             // Deserialize a Leaf VehicleLocatorResponse.  Data from August 2019.
-            var json = File.ReadAllText("TestLocationData.txt");
+            var json = File.ReadAllText("TestLocationData.json");
             var deserialized = JsonConvert.DeserializeObject<VehicleLocatorResponse>(json);
 
             Assert.IsNotNull(deserialized.Location);

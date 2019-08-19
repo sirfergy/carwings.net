@@ -17,16 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestLeafAuthData1.txt">
+    <None Update="TestLeafAuthData1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestLeafAuthData2.txt">
+    <None Update="TestLeafAuthData2.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestLeafBatteryRecord.txt">
+    <None Update="TestLeafBatteryRecord.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestLocationData.txt">
+    <None Update="TestLocationData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

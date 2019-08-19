@@ -17,6 +17,6 @@ namespace carwings.net
 
         // Returns a value in Celsius
         [JsonProperty("inc_temp")]
-        public float Inc_Temp { get; set; }
+        public float IncTemp { get; set; }
     }
 }

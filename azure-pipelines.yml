@@ -1,5 +1,4 @@
-# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
+# We want to build for .NET Standard (implemented by both .NET Core and the .NET Framework desktop)
 # Add steps that run tests, create a NuGet package, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
@@ -38,17 +37,4 @@ steps:
     nobuild: true
     versioningScheme: 'off'
 
-# The last task is a nuget command, nuget push
-# This will push any .nupkg files to the 'FlexChargingPackages' artifact feed
-# allowPackageConflicts allows us to build the same version and not throw an error when trying to push
-# instead it just ingores the latest package unless the version changes
-- task: NuGetCommand@2
-  displayName: 'nuget push'
-  inputs:
-    command: 'push'
-    feedsToUse: 'select'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'FlexChargingPackages'
-    versioningScheme: 'off'
-    allowPackageConflicts: true
+

@@ -35,9 +35,10 @@ namespace carwings.net
                 return;
             }
 
-            TimeSpan duration = (TimeSpan)value;
-            if (duration == null)
+            if (value == null)
                 throw new ArgumentException("TimeRequiredJsonConverter expected a TimeSpan.");
+
+            TimeSpan duration = (TimeSpan) value;
 
             //JToken t = JToken.FromObject(value);
             JObject o = new JObject();
